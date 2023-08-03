@@ -9,8 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stitches/react": "^1.2.8",
+    "keen-slider": "^6.8.6",
     "next": "13.4.9",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "stripe": "^12.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "@types/react": "^18.2.15",
+    "typescript": "^5.1.6"
   }
 }

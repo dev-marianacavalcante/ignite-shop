@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { GetStaticPaths, GetStaticProps } from "next";
+import Image from "next/image";
+
+import axios from "axios";
+
+import Stripe from "stripe";
+import { stripe } from "../../lib/stripe";
+
 import {
   ImageContainer,
   ProductContainer,
   ProductDetails,
 } from "../../styles/pages/product";
-import { GetStaticPaths, GetStaticProps } from "next";
-import { stripe } from "../../lib/stripe";
-import Stripe from "stripe";
-import Image from "next/image";
 
 interface ProductProps {
   product: {
@@ -21,9 +26,29 @@ interface ProductProps {
 }
 
 export default function product({ product }: ProductProps) {
-  function handleBuyProduct() {
-    console.log(product.defaultPriceId);
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
+
+  async function handleBuyProduct() {
+    try {
+      setIsCreatingCheckoutSession(true);
+
+      const response = await axios.post("/api/checkout", {
+        priceId: product.defaultPriceId,
+      });
+
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      // O melhor seria conectar com uma ferramenta de observabilidade (DataDog / Sentry)
+
+      setIsCreatingCheckoutSession(false);
+
+      alert("Falha ao redirecionar ao checkout!");
+    }
   }
+
   return (
     <ProductContainer>
       <ImageContainer>
@@ -33,17 +58,21 @@ export default function product({ product }: ProductProps) {
         <h1>{product.name}</h1>
         <span>{product.price}</span>
         <p>{product.description}</p>
-        <button onClick={handleBuyProduct}>Comprar agora</button>
+        <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
+          Comprar agora
+        </button>
       </ProductDetails>
     </ProductContainer>
   );
 }
+
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [{ params: { id: "prod_ONVRfhlk8CWdCF" } }],
     fallback: "blocking",
   };
 };
+
 export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
   params,
 }) => {

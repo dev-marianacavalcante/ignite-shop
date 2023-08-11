@@ -1,4 +1,4 @@
-import { styled } from "..";
+import { styled } from "@stitches/react";
 
 export const ProductContainer = styled("main", {
   display: "grid",
@@ -9,10 +9,11 @@ export const ProductContainer = styled("main", {
   maxWidth: 1180,
   margin: "0 auto",
 });
+
 export const ImageContainer = styled("div", {
   width: "100%",
-  height: 656,
   maxWidth: 576,
+  height: "calc(656px - 0.5rem)",
   background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
   borderRadius: 8,
   padding: "0.25rem",
@@ -25,6 +26,7 @@ export const ImageContainer = styled("div", {
     objectFit: "cover",
   },
 });
+
 export const ProductDetails = styled("div", {
   display: "flex",
   flexDirection: "column",
@@ -43,6 +45,9 @@ export const ProductDetails = styled("div", {
 
   p: {
     marginTop: "2.5rem",
+    fontSize: "$md",
+    lineHeight: 1.6,
+    color: "$gray300",
   },
 
   button: {

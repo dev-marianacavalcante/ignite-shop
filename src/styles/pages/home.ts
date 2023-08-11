@@ -1,20 +1,27 @@
-import { styled } from "..";
+import { styled } from "@stitches/react";
 
 export const HomeContainer = styled("main", {
-  display: "flex",
   width: "100%",
   maxWidth: "calc(100vw - ((100vw - 1180px) / 2))",
   marginLeft: "auto",
-  minHeight: 656,
 });
 
-export const Product = styled("div", {
+export const SliderContainer = styled("div", {
+  display: "flex",
+  gap: "3rem",
+  margin: "0 auto",
+  ".embla__slide": {
+    minWidth: "43.5rem",
+  },
+});
+
+export const Product = styled("a", {
   background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
   borderRadius: 8,
-  // padding: "0.25rem",
-  cursor: "pointer",
   position: "relative",
   overflow: "hidden",
+  width: "100%",
+  minHeight: 656,
 
   display: "flex",
   alignItems: "center",
@@ -37,13 +44,20 @@ export const Product = styled("div", {
     alignItems: "center",
     justifyContent: "space-between",
 
-    backgroundColor: "rgba(0,0,0, 0.6)",
+    transform: "translateY(110%)",
+    opacity: 0,
+    transition: "all 0.2s ease-in-out",
 
-    transform: "translate(110%)",
+    backgroundColor: "rgba(0,0,0,0.6)",
+
+    div: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 4,
+    },
 
     strong: {
       fontSize: "$lg",
-      color: "$gray100",
     },
 
     span: {
@@ -55,7 +69,7 @@ export const Product = styled("div", {
 
   "&:hover": {
     footer: {
-      transform: "translate(0%)",
+      transform: "translateY(0)",
       opacity: 1,
     },
   },

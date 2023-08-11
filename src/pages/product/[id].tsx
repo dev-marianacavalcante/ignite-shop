@@ -1,73 +1,56 @@
-import React, { useState } from "react";
-
+import axios from "axios";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
-
-import axios from "axios";
-
+import Head from "next/head";
+import { useRouter } from "next/router";
 import Stripe from "stripe";
-import { stripe } from "../../lib/stripe";
 
+import { stripe } from "../../lib/stripe";
 import {
   ImageContainer,
   ProductContainer,
   ProductDetails,
 } from "../../styles/pages/product";
-import Head from "next/head";
+import { IProduct } from "../../context/CartContext";
+import { useCart } from "../../hook/useCart";
 
 interface ProductProps {
-  product: {
-    id: string;
-    name: string;
-    imageUrl: string;
-    price: string;
-    description: string;
-    defaultPriceId: string;
-  };
+  product: IProduct;
 }
 
-export default function product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false);
+export default function Product({ product }: ProductProps) {
+  const { isFallback } = useRouter();
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true);
+  const { addToCart, checkIfItemAlreadyExists } = useCart();
 
-      const response = await axios.post("/api/checkout", {
-        priceId: product.defaultPriceId,
-      });
-
-      const { checkoutUrl } = response.data;
-
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      // O melhor seria conectar com uma ferramenta de observabilidade (DataDog / Sentry)
-
-      setIsCreatingCheckoutSession(false);
-
-      alert("Falha ao redirecionar ao checkout!");
-    }
+  if (isFallback) {
+    return <p>Loading...</p>;
   }
+
+  const itemAlreadyInCart = checkIfItemAlreadyExists(product.id);
 
   return (
     <>
       <Head>
-        <title>{product.name} | Ignite Shop</title>
+        <title>{`${product.name} | Ignite Shop`}</title>
       </Head>
-
       <ProductContainer>
         <ImageContainer>
-          <Image src={product.imageUrl} width={520} height={480} alt={""} />
+          <Image src={product.imageUrl} width={520} height={480} alt="" />
         </ImageContainer>
+
         <ProductDetails>
           <h1>{product.name}</h1>
           <span>{product.price}</span>
+
           <p>{product.description}</p>
+
           <button
-            disabled={isCreatingCheckoutSession}
-            onClick={handleBuyProduct}>
-            Comprar agora
+            disabled={itemAlreadyInCart}
+            onClick={() => addToCart(product)}>
+            {itemAlreadyInCart
+              ? "Produto já está no carrinho"
+              : "Colocar na sacola"}
           </button>
         </ProductDetails>
       </ProductContainer>
@@ -76,9 +59,11 @@ export default function product({ product }: ProductProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = [{ params: { id: "prod_MO0C3yNu4UBp9p" } }];
+
   return {
-    paths: [{ params: { id: "prod_ONVRfhlk8CWdCF" } }],
-    fallback: "blocking",
+    paths,
+    fallback: true,
   };
 };
 
@@ -103,6 +88,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
           style: "currency",
           currency: "BRL",
         }).format(price.unit_amount / 100),
+        numberPrice: price.unit_amount / 100,
         description: product.description,
         defaultPriceId: price.id,
       },

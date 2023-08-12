@@ -2,8 +2,10 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Head from "next/head";
 import Link from "next/link";
+
 import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
+
 import {
   ImageContainer,
   ImagesContainer,

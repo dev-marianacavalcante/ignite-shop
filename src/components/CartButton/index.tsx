@@ -1,5 +1,5 @@
-import { Handbag } from "phosphor-react";
 import { ComponentProps } from "react";
+import { Handbag } from "phosphor-react";
 import { CartButtonContainer } from "./styles";
 
 type CartButtonProps = ComponentProps<typeof CartButtonContainer> & {

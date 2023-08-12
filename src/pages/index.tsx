@@ -1,18 +1,21 @@
+import { MouseEvent, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+
 import Image from "next/image";
+import { GetStaticProps } from "next";
+import Link from "next/link";
+import Head from "next/head";
+
 import { HomeContainer, Product, SliderContainer } from "../styles/pages/home";
 
 import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
 
-import { GetStaticProps } from "next";
-import Link from "next/link";
-import Head from "next/head";
-
-import useEmblaCarousel from "embla-carousel-react";
 import { ProductSkeleton } from "../components/ProductSkeleton";
-import { MouseEvent, useEffect, useState } from "react";
 import { CartButton } from "../components/CartButton";
+
 import { IProduct } from "../context/CartContext";
+
 import { useCart } from "../hook/useCart";
 
 interface HomeProps {

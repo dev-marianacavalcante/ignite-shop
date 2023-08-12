@@ -1,4 +1,11 @@
 import * as Dialog from "@radix-ui/react-dialog";
+
+import { useState } from "react";
+
+import Image from "next/image";
+
+import axios from "axios";
+
 import {
   CartClose,
   CartContent,
@@ -8,11 +15,10 @@ import {
   CartProductImage,
   FinalizationDetails,
 } from "./styles";
-import { X } from "phosphor-react";
-import Image from "next/image";
-import { useState } from "react";
-import axios from "axios";
 import { CartButton } from "../CartButton";
+
+import { X } from "phosphor-react";
+
 import { useCart } from "../../hook/useCart";
 
 export function Cart() {
